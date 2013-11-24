@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 2.8)
+project (CHARACTER-RECOGNITION)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
+file(GLOB lib_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+set(appLib characterapp)
+add_library(${appLib} ${LIB_TYPE} ${lib_srcs})
+set(deps tesseractocr)
+
+#link libraries
+set(targetLib characterrecognition)
+target_link_libraries(${targetLib} ${deps} $appLib})
+
+add_executable(characterrecognition_example systest/tesseractmain.cpp)
+target_link_libraries(characterrecognition_example ${targetLib})
+
