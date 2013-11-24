@@ -128,7 +128,7 @@ Podfile.lock
 *.jpg
 *.png
 *.JPG
- 
+*.tif
 ###
 ### Video Files
 ###
@@ -179,6 +179,7 @@ a.out
 ###
 ### Sound Files
 ###
-sampels/* 
+samples/* 
 *.sig
 *.wav
+doc/*
