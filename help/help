@@ -1,3 +1,5 @@
 ########### help files ################
-1. Tesseract OCR 性能提升: http://www.cnblogs.com/physoft/archive/2011/07/19/2110513.html
-2. 
+
+number   content                    reference
+1.       Tesseract OCR 性能提升:      http://www.cnblogs.com/physoft/archive/2011/07/19/2110513.html
+2.       about tesseract             paper--Adapting the tesseract open source OCR Engine for multilingual OCR.
