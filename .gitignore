@@ -183,3 +183,7 @@ samples/*
 *.sig
 *.wav
 doc/*
+###
+### Data Files
+###
+data/*
