@@ -10,8 +10,8 @@ set(deps tesseractocr)
 #link libraries
 target_link_libraries(${target} ${deps})
 
-#add_executable(characterrecognition_example systest/tesseractmain.cpp)
-#target_link_libraries(characterrecognition_example ${target})
-add_executable(tesseractmain systest/tesseractmain.cpp)
-target_link_libraries(tesseractmain ${target})
+add_executable(character-recognition_example systest/character-recognition_example.cpp)
+target_link_libraries(character-recognition_example ${target})
+#add_executable(tesseractmain systest/tesseractmain.cpp)
+#target_link_libraries(tesseractmain ${target})
 
