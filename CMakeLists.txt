@@ -9,12 +9,25 @@ if (CMAKE_COMPILER_IS_GNUC OR CMAKE_COMPILER_IS_GNUCXX)
 #  set(CMAKE_LD_FLAGS "-lpthread")
 endif ()
 
+# set output path
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 # USE_STD_NAMESPACE
 option(USE_STD_NAMESPACE "use std namespace" ON)
 if (USE_STD_NAMESPACE)
   add_definitions(-DUSE_STD_NAMESPACE)
 endif()
+
+# use 3rd part library
+option(USE_LIB_LEPTONIC "enable leptonic lib" ON)
+option(USE_LIB_OPENCV   "enable opencv lib" OFF)
+if (USE_LIB_LEPTONIC)
+  add_definitions(-DUSE_LIB_LEPTONIC)
+endif ()
+if (USE_LIB_OPENCV)
+  add_definitions(-DUSE_LIB_OPENCV)
+endif ()
 
 # tesserocr include
 include_directories(./ccmain/)
@@ -29,17 +42,16 @@ include_directories(./neural_networks/runtime/)
 include_directories(./viewer/)
 include_directories(./wordrec/)
 include_directories(./textord/)
+
 # leptonic include
-include_directories(/usr/local/include/leptonica/)
+if (USE_LIB_LEPTONIC)
+  include_directories(/usr/local/include/leptonica/)
+  find_library(leptLib lept)  #liblept.so
+else ()
+
+endif ()
+
 include_directories(/usr/include/)
-
-link_directories(/usr/lib)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-
-#find_library(mLib m) # libm.so
-find_library(leptLib lept)  #liblept.so
 find_library(pthreadLib pthread) #libpthread.so
 
 set(targetLib tesseractocr)

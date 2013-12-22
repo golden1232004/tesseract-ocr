@@ -702,7 +702,7 @@ PageIterator* TessBaseAPI::AnalyseLayout() {
 int TessBaseAPI::Recognize(ETEXT_DESC* monitor) {
   if (tesseract_ == NULL)
     return -1;
-  if (FindLines() != 0)
+  if (FindLines() != 0)   // this function is important, all pix is in it.
     return -1;
   if (page_res_ != NULL)
     delete page_res_;
