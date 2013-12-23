@@ -15,3 +15,4 @@ number    class                file                    dir
 7         BLOCK                ocrblock.h              ccstruct
 8         Textord              textord.cpp             textord
 	  		       tordmain.cpp
+9         TessdataManager      tessdatamanager.cpp     ccutil

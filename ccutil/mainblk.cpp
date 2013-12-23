@@ -51,7 +51,8 @@ void CCUtil::main_setup(                 /*main demo program */
   // TESSDATA_PREFIX Environment variable overrules everything.
   // Compiled in -DTESSDATA_PREFIX is next.
   // An actual value of argv0 is used if not NULL, otherwise current directory.
-  if (!getenv("TESSDATA_PREFIX")) {
+  char *env = getenv("TESSDATA_PREFIX");
+  if (!env) {
 #ifdef TESSDATA_PREFIX
 #define _STR(a) #a
 #define _XSTR(a) _STR(a)
