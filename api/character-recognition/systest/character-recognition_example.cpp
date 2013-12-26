@@ -13,13 +13,16 @@ int main(int argc, char *argv[])
 {
     char *outText;
     STRING fileName = argv[1];
-    STRING lang = argv[2];
-    //tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    STRING dataPath = argv[2];
+    STRING lang = argv[3];
+
     TessBaseAPI *api = new TessBaseAPI();
+    /*
     STRING tessdata_prefix = "TESSDATA_PREFIX";
     char *dataPath = getenv(tessdata_prefix.string());
+    */
     // Initialize tesseract-ocr with English, without specifying tessdata path
-    if (api->Init(NULL, lang.string())) {
+    if (api->Init(dataPath.string(), lang.string())) {
         fprintf(stderr, "Could not initialize tesseract.\n");
         exit(1);
     }
