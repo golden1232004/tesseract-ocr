@@ -216,6 +216,9 @@ void TessBaseAPI::PrintVariables(FILE *fp) const {
  * be returned.
  * @return: 0 on success and -1 on initialization failure.
  */
+/**
+ * @param oem: it is defined ccstruct/publictypes.h
+ */
 int TessBaseAPI::Init(const char* datapath, const char* language,
                       OcrEngineMode oem, char **configs, int configs_size,
                       const GenericVector<STRING> *vars_vec,
