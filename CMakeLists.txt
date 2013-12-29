@@ -29,6 +29,11 @@ if (USE_LIB_OPENCV)
   add_definitions(-DUSE_LIB_OPENCV)
 endif ()
 
+option(ENABLE_TEMPORARY_IMAGE "to save temporary image" OFF)
+if (ENABLE_TEMPORARY_IMAGE)
+  add_definitions(-DENABLE_TEMPORARY_IMAGE)
+endif ()
+
 # tesserocr include
 include_directories(./ccmain/)
 include_directories(./ccstruct/)
@@ -53,11 +58,19 @@ endif ()
 
 include_directories(/usr/include/)
 find_library(pthreadLib pthread) #libpthread.so
+if (NOT CMAKE_CROSSCOMPILING)
+  include_directories(${OpenCV_INCLUDE_DIRS})
+  find_package(OpenCV REQUIRED)
+endif ()
 
 set(targetLib tesseractocr)
 file (GLOB lib_srcs ./ccmain/*.cpp ./ccstruct/*.cpp ./ccutil/*.cpp ./classify/*.cpp ./cube/*.cpp ./cutil/*.cpp ./dict/*.cpp ./image/*.cpp ./neural_networks/runtime/*.cpp ./viewer/*.cpp ./wordrec/*.cpp ./textord/*.cpp)
 add_library(${targetLib} ${lib_srcs}) #to generate static lib libtesseractocr.a
-target_link_libraries(${targetLib} ${leptLib} ${pthreadLib})
+if (NOT CMAKE_CROSSCOMPILING)
+  target_link_libraries(${targetLib} ${leptLib} ${pthreadLib} ${OpenCV_LIBS})
+else ()
+  target_link_libraries(${targetLib} ${leptLib} ${pthreadLib})
+endif ()
 
 ################### Apps ########################
 add_subdirectory(api)

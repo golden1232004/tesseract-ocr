@@ -26,6 +26,10 @@
 #include "img.h"
 #include "otsuthr.h"
 
+#include "opencv2/opencv.hpp"
+
+using namespace cv;
+
 namespace tesseract {
 
 ImageThresholder::ImageThresholder()
@@ -147,6 +151,9 @@ void ImageThresholder::ThresholdToPix(Pix** pix) {
         const uinT32* data = pixGetData(pix_);
         OtsuThresholdRectToPix(reinterpret_cast<const uinT8*>(data),
                                image_bytespp_, image_bytespl_, pix);
+#ifdef ENABLE_TEMPORARY_IMAGE
+  
+#endif 
       } else {
         // Convert 8-bit to IMAGE and then pass its
         // buffer to the raw interface to complete the conversion.
