@@ -1024,9 +1024,12 @@ MutableIterator* TessBaseAPI::GetMutableIterator() {
 
 /** Make a text string from the internal data structures. */
 char* TessBaseAPI::GetUTF8Text() {
-  if (tesseract_ == NULL ||
-      (!recognition_done_ && Recognize(NULL) < 0))
+  if (tesseract_ == NULL || (recognition_done_ /*&& Recognize(NULL) < 0*/))
     return NULL;
+  int r = Recognize(NULL);
+  if (r < 0){
+      return NULL;
+  }
   STRING text("");
   ResultIterator *it = GetIterator();
   do {
@@ -1612,8 +1615,14 @@ bool TessBaseAPI::InternalSetImage() {
 void TessBaseAPI::Threshold(Pix** pix) {
   ASSERT_HOST(pix != NULL);
   if (!thresholder_->IsBinary()) {
-    tesseract_->set_pix_grey(thresholder_->GetPixRectGrey());
+      tesseract_->set_pix_grey(thresholder_->GetPixRectGrey()); // get grey image
   }
+
+#if ENABLE_TEMPORARY_IMAGE
+
+
+#endif 
+
   if (*pix != NULL)
     pixDestroy(pix);
   // Zero resolution messes up the algorithms, so make sure it is credible.
@@ -1656,8 +1665,10 @@ int TessBaseAPI::FindLines() {
     tesseract_ = new Tesseract;
     tesseract_->InitAdaptiveClassifier(false);
   }
-  if (tesseract_->pix_binary() == NULL)
-    Threshold(tesseract_->mutable_pix_binary());
+  if (tesseract_->pix_binary() == NULL){
+      Pix** img_pix = tesseract_->mutable_pix_binary();
+      Threshold(img_pix);
+  }
   if (tesseract_->ImageWidth() > MAX_INT16 ||
       tesseract_->ImageHeight() > MAX_INT16) {
     tprintf("Image too large: (%d, %d)\n",

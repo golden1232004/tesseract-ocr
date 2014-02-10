@@ -3,6 +3,12 @@
 #include <allheaders.h>
 
 #include "strngs.h"
+#include "pixel-data.h"
+
+#if ENABLE_TEMPORARY_IMAGE
+#include "opencv2/opencv.hpp"
+using namespace cv;
+#endif
 
 using namespace tesseract;
 using namespace std;
@@ -28,20 +34,20 @@ int main(int argc, char *argv[])
     }
 
     // Open input image with leptonica library
-    Pix *image = pixRead(fileName.string());
+    PIX *image = pixRead(fileName.string());
 
-#if SAVE_FILE
-    FILE *fp = fopen("image_data.txt","w");
-    if (fp){
-      int w = image->w;
-      int h = image->h;
-      int i ;
-      for (i = 0; i < w * h; i++){
-	fprintf(fp, "%c ", (unsigned char)image->data[i]);
-      }
-    }
-    fclose(fp);
+#if ENABLE_TEMPORARY_IMAGE
+    //    Pix *gray_img = pixConvertRGBToLuminance(image);
+    int w = image->w;
+    int h = image->h;
+    unsigned char *rgb = (unsigned char*) malloc(h*w*3*sizeof(unsigned char));
+    imageFormatConvert_pix2RGB(image, rgb);
+    Mat img(h, w, CV_8UC3, rgb);
+    imshow("rgb", img);
+    waitKey(0);
+    free(rgb);
 #endif
+
     api->SetImage(image);
     // Get OCR result
     outText = api->GetUTF8Text();

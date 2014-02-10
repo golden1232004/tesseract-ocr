@@ -10,10 +10,7 @@ int imageFormatConvert_pix2RGB(PIX *pix, unsigned char *rgb)
 
     int w;
     int h;
-    int bytes_per_pixel;
-    int all_bytes;
-    int i,j;
-    int start;
+    int i;
     unsigned int *data = NULL;
     unsigned int value;
     unsigned char *r = rgb;
@@ -25,9 +22,6 @@ int imageFormatConvert_pix2RGB(PIX *pix, unsigned char *rgb)
     }
     w = pix->w;
     h = pix->h;
-    //   bytes_per_pixel = sizeof(pix->data[0]);
-    //    all_bytes = bytes_per_pixel
-    //    start = bytes_per_pixel - 1;
     data = pix->data;
     for(i = 0; i < h * w; i++){
         value = *(data + i);

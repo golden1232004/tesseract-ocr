@@ -64,7 +64,7 @@ if (NOT CMAKE_CROSSCOMPILING)
 endif ()
 
 set(targetLib tesseractocr)
-file (GLOB lib_srcs ./ccmain/*.cpp ./ccstruct/*.cpp ./ccutil/*.cpp ./classify/*.cpp ./cube/*.cpp ./cutil/*.cpp ./dict/*.cpp ./image/*.cpp ./neural_networks/runtime/*.cpp ./viewer/*.cpp ./wordrec/*.cpp ./textord/*.cpp)
+file (GLOB lib_srcs ./ccmain/*.cpp ./ccstruct/*.cpp ./ccutil/*.cpp ./classify/*.cpp ./cube/*.cpp ./cutil/*.cpp ./dict/*.cpp ./image/*.cpp ./image/*.c ./neural_networks/runtime/*.cpp ./viewer/*.cpp ./wordrec/*.cpp ./textord/*.cpp)
 add_library(${targetLib} ${lib_srcs}) #to generate static lib libtesseractocr.a
 if (NOT CMAKE_CROSSCOMPILING)
   target_link_libraries(${targetLib} ${leptLib} ${pthreadLib} ${OpenCV_LIBS})
