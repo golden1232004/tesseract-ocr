@@ -3,17 +3,13 @@
 #include <allheaders.h>
 
 #include "strngs.h"
-#include "pixel-data.h"
+#include "pixel-array.h"
 
-#if ENABLE_TEMPORARY_IMAGE
 #include "opencv2/opencv.hpp"
 using namespace cv;
-#endif
 
 using namespace tesseract;
 using namespace std;
-
-#define SAVE_FILE 0
 
 int main(int argc, char *argv[])
 {
@@ -36,16 +32,24 @@ int main(int argc, char *argv[])
     // Open input image with leptonica library
     PIX *image = pixRead(fileName.string());
 
-#if ENABLE_TEMPORARY_IMAGE
-    //    Pix *gray_img = pixConvertRGBToLuminance(image);
-    int w = image->w;
-    int h = image->h;
-    unsigned char *rgb = (unsigned char*) malloc(h*w*3*sizeof(unsigned char));
-    imageFormatConvert_pix2RGB(image, rgb);
-    Mat img(h, w, CV_8UC3, rgb);
-    imshow("rgb", img);
+#if ENABLE_SHOW_TEMPORARY_IMAGE
+
+    PIX* gray = pixConvertRGBToLuminance(image);
+    tkPixelArray *pixelArray = imageFormatConvert_pix2pixelArray(gray);
+    int fmt;
+    if (IMAGE_FORMAT_RGB == pixelArray->format){
+        fmt = CV_8UC3;
+    }
+    else if (IMAGE_FORMAT_GRAY == pixelArray->format){
+        fmt = CV_8UC1;
+    }
+    Mat img(pixelArray->height, pixelArray->width, fmt, pixelArray->data[0]);
+    imwrite("rgb.jpg", img);
+    imshow("rgb", img);  
     waitKey(0);
-    free(rgb);
+    free(pixelArray->data[0]);
+    free(pixelArray);
+
 #endif
 
     api->SetImage(image);

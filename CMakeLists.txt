@@ -5,8 +5,13 @@ project(TESSERACT-OCR)
 
 # compile code , which is position independent 
 if (CMAKE_COMPILER_IS_GNUC OR CMAKE_COMPILER_IS_GNUCXX)
+ # add_definitions(-Wall -Wunused-function)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-#  set(CMAKE_LD_FLAGS "-lpthread")
+  set(CMAKE_C_FLAGs "${CMAKE_C_FLAGS} -fPIC")
+  if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
+    string(REGEX REPLACE "(-g |-g$)" "-g3 " CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+    string(REGEX REPLACE "(-g |-g$)" "-g3 " CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+  endif ()
 endif ()
 
 # set output path
@@ -28,11 +33,16 @@ endif ()
 if (USE_LIB_OPENCV)
   add_definitions(-DUSE_LIB_OPENCV)
 endif ()
-
-option(ENABLE_TEMPORARY_IMAGE "to save temporary image" OFF)
-if (ENABLE_TEMPORARY_IMAGE)
-  add_definitions(-DENABLE_TEMPORARY_IMAGE)
+##----------------------------------------------------------------
+option(ENABLE_SAVE_TEMPORARY_IMAGE "to save temporary image" OFF)
+if (ENABLE_SAVE_TEMPORARY_IMAGE)
+  add_definitions(-DENABLE_SAVE_TEMPORARY_IMAGE)
 endif ()
+option(ENABLE_SHOW_TEMPORARY_IMAGE "to show temporary image" OFF)
+if (ENABLE_SHOW_TEMPORARY_IMAGE)
+  add_definitions(-DENABLE_SHOW_TEMPORARY_IMAGE)
+endif()
+##----------------------------------------------------------------
 
 # tesserocr include
 include_directories(./ccmain/)
@@ -59,17 +69,21 @@ endif ()
 include_directories(/usr/include/)
 find_library(pthreadLib pthread) #libpthread.so
 if (NOT CMAKE_CROSSCOMPILING)
-  include_directories(${OpenCV_INCLUDE_DIRS})
+ # message(${OpenCV_INCLUDE_DIRS})
+  include_directories(/usr/local/include)
   find_package(OpenCV REQUIRED)
 endif ()
 
 set(targetLib tesseractocr)
 file (GLOB lib_srcs ./ccmain/*.cpp ./ccstruct/*.cpp ./ccutil/*.cpp ./classify/*.cpp ./cube/*.cpp ./cutil/*.cpp ./dict/*.cpp ./image/*.cpp ./image/*.c ./neural_networks/runtime/*.cpp ./viewer/*.cpp ./wordrec/*.cpp ./textord/*.cpp)
+###
+# ToDo: I do not know that static lib will lead to compile error, which is "recompile with -fPIC".
+###
 add_library(${targetLib} ${lib_srcs}) #to generate static lib libtesseractocr.a
 if (NOT CMAKE_CROSSCOMPILING)
-  target_link_libraries(${targetLib} ${leptLib} ${pthreadLib} ${OpenCV_LIBS})
-else ()
   target_link_libraries(${targetLib} ${leptLib} ${pthreadLib})
+else ()
+  target_link_libraries(${targetLib} ${pthreadLib})
 endif ()
 
 ################### Apps ########################

@@ -8,7 +8,11 @@ add_library(${target} ${LIB_TYPE} ${lib_srcs})
 set(deps tesseractocr)
 
 #link libraries
-target_link_libraries(${target} ${deps})
+if (ENABLE_SAVE_TEMPORARY_IMAGE)
+  target_link_libraries(${target} ${deps} ${OpenCV_LIBS})
+else ()
+  target_link_libraries(${target} ${deps})
+endif () 
 
 add_executable(character-recognition_example systest/character-recognition_example.cpp)
 target_link_libraries(character-recognition_example ${target})

@@ -58,6 +58,9 @@
 #include "params.h"
 #include "strngs.h"
 
+#include "pixel-array.h"
+
+
 #ifdef _WIN32
 #include <windows.h>
 #include <stdlib.h>
@@ -1615,13 +1618,16 @@ bool TessBaseAPI::InternalSetImage() {
 void TessBaseAPI::Threshold(Pix** pix) {
   ASSERT_HOST(pix != NULL);
   if (!thresholder_->IsBinary()) {
-      tesseract_->set_pix_grey(thresholder_->GetPixRectGrey()); // get grey image
-  }
+      Pix* gray = thresholder_->GetPixRectGrey();
+      tesseract_->set_pix_grey(gray); // get gray image
 
-#if ENABLE_TEMPORARY_IMAGE
-
-
+#if ENABLE_SAVE_TEMPORARY_IMAGE
+      tkPixelArray *pa = imageFormatConvert_pix2pixelArray(gray);
+      debug_imwrite(*pa, "gray.jpg");
+      imageFormatConvert_destroy(pa);
 #endif 
+
+  }
 
   if (*pix != NULL)
     pixDestroy(pix);
